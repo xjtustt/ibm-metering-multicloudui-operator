@@ -1,0 +1,25 @@
+apiVersion: operator.ibm.com/v1alpha1
+kind: MeteringMultiCloudUI
+metadata:
+  name: meteringmcmui
+  labels:
+    app.kubernetes.io/instance: "ibm-metering-operator"
+    app.kubernetes.io/managed-by: "ibm-metering-operator"
+    app.kubernetes.io/name: "ibm-metering"
+spec:
+  version: "3.6.3"
+  imageRegistry: quay.io/opencloudio
+  replicas: 1
+  ui:
+    iamNamespace: ibm-common-services
+    ingressNamespace: ibm-common-services
+    commonHeaderNamespace: ibm-common-services
+  mongodb:
+    host: mongodb
+    port: 27017
+    usernameSecret: icp-mongodb-admin
+    usernameKey: user
+    passwordSecret: icp-mongodb-admin
+    passwordKey: password
+    clustercertssecret: mongodb-root-ca-cert
+    clientcertssecret: icp-mongodb-client-cert
