@@ -1,0 +1,259 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    olm.skipRange: '>=3.5.0 <3.7.0'
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "operator.ibm.com/v1alpha1",
+          "kind": "MeteringMultiCloudUI",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/instance": "ibm-metering-operator",
+              "app.kubernetes.io/managed-by": "ibm-metering-operator",
+              "app.kubernetes.io/name": "ibm-metering"
+            },
+            "name": "meteringmcmui"
+          },
+          "spec": {
+            "imageRegistry": "quay.io/opencloudio",
+            "mongodb": {
+              "clientcertssecret": "icp-mongodb-client-cert",
+              "clustercertssecret": "mongodb-root-ca-cert",
+              "host": "mongodb",
+              "passwordKey": "password",
+              "passwordSecret": "icp-mongodb-admin",
+              "port": 27017,
+              "usernameKey": "user",
+              "usernameSecret": "icp-mongodb-admin"
+            },
+            "replicas": 1,
+            "ui": {
+              "commonHeaderNamespace": "ibm-common-services",
+              "iamNamespace": "ibm-common-services",
+              "ingressNamespace": "ibm-common-services"
+            },
+            "version": "3.7.0"
+          }
+        }
+      ]
+    capabilities: Basic Install
+  name: ibm-metering-multicloudui-operator.v3.7.0
+  namespace: ibm-common-services
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: MeteringMultiCloudUI is the Schema for the meteringmulticlouduis
+        API
+      kind: MeteringMultiCloudUI
+      name: meteringmulticlouduis.operator.ibm.com
+      version: v1alpha1
+  description: |-
+    **Important:** Do not install this operator directly. Only install this operator using the IBM Common Services Operator.
+    For more information about installing this operator and other Common Services operators, see [Installer documentation](http://ibm.biz/cpcs_opinstall).
+    Additionally, you can exit this panel and navigate to the IBM Common Services tile in OperatorHub to learn more about the operator.
+
+    If you are using this operator as part of an IBM Cloud Pak, see the documentation for that IBM Cloud Pak to learn more about how to install and use the operator service.
+    For more information about IBM Cloud Paks, see [IBM Cloud Paks that use Common Services](http://ibm.biz/cpcs_cloudpaks).
+
+    You can use the ibm-metering-multicloudui-operator to install the Metering MultiCloudUI service for the IBM Cloud Platform Common Services.
+    The Metering MultiCloudUI service displays the UI of metering for managed clusters.
+
+    For more information about the available IBM Cloud Platform Common Services, see the [IBM Knowledge Center](http://ibm.biz/cpcsdocs).
+
+    ## Supported platforms
+    Red Hat OpenShift Container Platform 4.3 or newer installed on one of the following platforms:
+    - Linux x86_64
+    - Linux on Power (ppc64le)
+    - Linux on IBM Z and LinuxONE
+
+    ## Prerequisites
+    The Metering service has dependencies on other IBM Cloud Platform Common Services.
+    Before you install this operator, you need to first install the operator dependencies and prerequisites:
+    - For the list of operator dependencies, see the IBM Knowledge Center [Common Services dependencies documentation](http://ibm.biz/cpcs_opdependencies).
+    - For the list of prerequisites for installing the operator, see the IBM Knowledge Center [Preparing to install services documentation](http://ibm.biz/cpcs_opinstprereq).
+
+    ## Documentation
+    To install the operator with the IBM Common Services Operator follow the installation and configuration instructions within the IBM Knowledge Center.
+    - If you are using the operator as part of an IBM Cloud Pak, see the documentation for that IBM Cloud Pak. For a list of IBM Cloud Paks, see [IBM Cloud Paks that use Common Services](http://ibm.biz/cpcs_cloudpaks).
+    - If you are using the operator with an IBM Containerized Software, see the IBM Cloud Platform Common Services Knowledge Center [Installer documentation](http://ibm.biz/cpcs_opinstall).
+  displayName: Ibm Metering MultiCloudUI Operator
+  install:
+    spec:
+      deployments:
+      - name: ibm-metering-multicloudui-operator
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              name: ibm-metering-multicloudui-operator
+          strategy: {}
+          template:
+            metadata:
+              annotations:
+                productID: 068a62892a1e4db39641342e592daa25
+                productMetric: FREE
+                productName: IBM Cloud Platform Common Services
+                productVersion: 3.4.0
+              labels:
+                app.kubernetes.io/instance: ibm-metering-multicloudui-operator
+                app.kubernetes.io/managed-by: ibm-metering-multicloudui-operator
+                app.kubernetes.io/name: ibm-metering
+                name: ibm-metering-multicloudui-operator
+            spec:
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: beta.kubernetes.io/arch
+                        operator: In
+                        values:
+                        - amd64
+                        - ppc64le
+                        - s390x
+              containers:
+              - command:
+                - ibm-metering-operator
+                env:
+                - name: IMAGE_SHA_OR_TAG_DM
+                  value: 3.6.0
+                - name: IMAGE_SHA_OR_TAG_MCMUI
+                  value: 3.6.0
+                - name: WATCH_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.annotations['olm.targetNamespaces']
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+                - name: OPERATOR_NAME
+                  value: ibm-metering-multicloudui-operator
+                - name: SA_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: spec.serviceAccountName
+                image: quay.io/opencloudio/ibm-metering-multicloudui-operator:latest
+                imagePullPolicy: Always
+                name: ibm-metering-multicloudui-operator
+                resources:
+                  limits:
+                    cpu: 100m
+                    memory: 300Mi
+                  requests:
+                    cpu: 10m
+                    memory: 50Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                    - ALL
+                  privileged: false
+                  readOnlyRootFilesystem: true
+                  runAsNonRoot: true
+              serviceAccountName: ibm-metering-multicloudui-operator
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          - services
+          - services/finalizers
+          - endpoints
+          - persistentvolumeclaims
+          - events
+          - configmaps
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - deployments
+          - daemonsets
+          - replicasets
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resources:
+          - servicemonitors
+          verbs:
+          - get
+          - create
+        - apiGroups:
+          - apps
+          resourceNames:
+          - ibm-metering-multicloudui-operator
+          resources:
+          - deployments/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+        - apiGroups:
+          - apps
+          resources:
+          - replicasets
+          - deployments
+          verbs:
+          - get
+        - apiGroups:
+          - operator.ibm.com
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        serviceAccountName: ibm-metering-multicloudui-operator
+    strategy: deployment
+  installModes:
+  - supported: true
+    type: OwnNamespace
+  - supported: true
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - Metering
+  - IBM
+  - Cloud
+  links:
+  - name: IBM Metering MultiCloudUI Operator Project
+    url: https://github.com/IBM/ibm-metering-multicloudui-operator
+  maintainers:
+  - email: support@ibm.com
+    name: IBM Support
+  maturity: alpha
+  provider:
+    name: IBM
+  replaces: ibm-metering-multicloudui-operator.v0.0.0
+  version: 3.7.0

@@ -1,0 +1,5 @@
+channels:
+- currentCSV: ibm-metering-multicloudui-operator.v3.7.0
+  name: dev
+defaultChannel: dev
+packageName: ibm-metering-multicloudui-operator-app

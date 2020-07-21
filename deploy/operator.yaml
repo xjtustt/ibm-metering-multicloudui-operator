@@ -48,9 +48,9 @@ spec:
           imagePullPolicy: Always
           env:
             - name: IMAGE_SHA_OR_TAG_DM
-              value: 3.5.1
+              value: 3.6.0
             - name: IMAGE_SHA_OR_TAG_MCMUI
-              value: 3.5.1
+              value: 3.6.0
             - name: WATCH_NAMESPACE
               valueFrom:
                 fieldRef:
