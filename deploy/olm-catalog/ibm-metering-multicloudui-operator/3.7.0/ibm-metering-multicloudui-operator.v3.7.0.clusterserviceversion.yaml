@@ -10,8 +10,8 @@ metadata:
           "kind": "MeteringMultiCloudUI",
           "metadata": {
             "labels": {
-              "app.kubernetes.io/instance": "ibm-metering-operator",
-              "app.kubernetes.io/managed-by": "ibm-metering-operator",
+              "app.kubernetes.io/instance": "ibm-metering-multicloudui-operator",
+              "app.kubernetes.io/managed-by": "ibm-metering-multicloudui-operator",
               "app.kubernetes.io/name": "ibm-metering"
             },
             "name": "meteringmcmui"
