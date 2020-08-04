@@ -78,3 +78,47 @@ rules:
   - patch
   - update
   - watch
+- apiGroups:
+  - certmanager.k8s.io
+  resources:
+  - '*'
+  - certificates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  - extensions
+  resources:
+  - '*'
+  - ingresses
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ibm-metering-multicloudui-operator
+  labels:
+    app.kubernetes.io/instance: "ibm-metering-multicloudui-operator"
+    app.kubernetes.io/managed-by: "ibm-metering-multicloudui-operator"
+    app.kubernetes.io/name: "ibm-metering"
+rules:
+#required by operator to create certificates
+- apiGroups:
+  - certmanager.k8s.io
+  resources:
+  - clusterissuers
+  verbs:
+  - use

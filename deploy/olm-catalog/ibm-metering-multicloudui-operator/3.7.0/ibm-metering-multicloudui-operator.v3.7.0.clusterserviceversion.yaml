@@ -10,8 +10,8 @@ metadata:
           "kind": "MeteringMultiCloudUI",
           "metadata": {
             "labels": {
-              "app.kubernetes.io/instance": "ibm-metering-operator",
-              "app.kubernetes.io/managed-by": "ibm-metering-operator",
+              "app.kubernetes.io/instance": "ibm-metering-multicloudui-operator",
+              "app.kubernetes.io/managed-by": "ibm-metering-multicloudui-operator",
               "app.kubernetes.io/name": "ibm-metering"
             },
             "name": "meteringmcmui"
@@ -127,6 +127,15 @@ spec:
     mediatype: image/png
   install:
     spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - certmanager.k8s.io
+          resources:
+          - clusterissuers
+          verbs:
+          - use
+        serviceAccountName: ibm-metering-multicloudui-operator
       deployments:
       - name: ibm-metering-multicloudui-operator
         spec:
@@ -161,7 +170,7 @@ spec:
                         - s390x
               containers:
               - command:
-                - ibm-metering-operator
+                - ibm-metering-multicloudui-operator
                 env:
                 - name: IMAGE_SHA_OR_TAG_DM
                   value: 3.6.0
@@ -268,6 +277,33 @@ spec:
           - operator.ibm.com
           resources:
           - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - certmanager.k8s.io
+          resources:
+          - '*'
+          - certificates
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - networking.k8s.io
+          - extensions
+          resources:
+          - '*'
+          - ingresses
           verbs:
           - create
           - delete
